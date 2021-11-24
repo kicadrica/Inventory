@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MainSpriteAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+    variantMultiplier: 1
+    packables:
+    - {fileID: -153891156398794210, guid: b1b0bb886f7d851419efcac348437ee8, type: 3}
+    - {fileID: -4634398448238071210, guid: b1b0bb886f7d851419efcac348437ee8, type: 3}
+    - {fileID: 5778955090629986120, guid: b1b0bb886f7d851419efcac348437ee8, type: 3}
+    - {fileID: 3422849895820167655, guid: 4f9728ec8efcab241bca769ea3c7a987, type: 3}
+    - {fileID: 7180035467778300314, guid: 36ffd36ef0fe7de4daa0c8c912bf88c4, type: 3}
+    - {fileID: 197227686737462818, guid: b1b0bb886f7d851419efcac348437ee8, type: 3}
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: -4634398448238071210, guid: b1b0bb886f7d851419efcac348437ee8, type: 3}
+  - {fileID: 197227686737462818, guid: b1b0bb886f7d851419efcac348437ee8, type: 3}
+  - {fileID: 5778955090629986120, guid: b1b0bb886f7d851419efcac348437ee8, type: 3}
+  - {fileID: -153891156398794210, guid: b1b0bb886f7d851419efcac348437ee8, type: 3}
+  - {fileID: 3422849895820167655, guid: 4f9728ec8efcab241bca769ea3c7a987, type: 3}
+  - {fileID: 7180035467778300314, guid: 36ffd36ef0fe7de4daa0c8c912bf88c4, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - RogueEnvironment16x16_146
+  - RogueEnvironment16x16_137
+  - RogueEnvironment16x16_169
+  - RogueEnvironment16x16_153
+  - wizard_0
+  - ItemsMaker_0
+  m_Tag: MainSpriteAtlas
+  m_IsVariant: 0

@@ -1,33 +1,32 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InputAWSD : MonoBehaviour
 {
-    private PlayerController player; //Создание приватной переменной типа PlayerControler.
-    void Start()
+    private PlayerController _player;
+    private void Start()
     {
-        player = GetComponentInChildren<PlayerController>(); //Запись компонента PlayerControler в переменную.
+        _player = GetComponentInChildren<PlayerController>(); 
     }
 
     
-    void Update()
+    private void Update()
     {
-        if (Input.GetKey(KeyCode.W)) //Если нажата клавиша W, объект игрок запускает метод движения вверх.
+        //В зависимости от нажатой клавиши, в игрока запускается свой метод направления движения.
+        if (Input.GetKey(KeyCode.W)) 
         {
-            player.MoveUp();
+            _player.MoveUp();
         }
-        if (Input.GetKey(KeyCode.S)) //Если нажата клавиша S, объект игрок запускает метод движения вниз.
+        if (Input.GetKey(KeyCode.S)) 
         {
-            player.MoveDown();
+            _player.MoveDown();
         }
-        if (Input.GetKey(KeyCode.A)) //Если нажата клавиша A, объект игрок запускает метод движения влево.
+        if (Input.GetKey(KeyCode.A)) 
         {
-            player.MoveLeft();
+            _player.MoveLeft();
         }
-        if (Input.GetKey(KeyCode.D)) //Если нажата клавиша D, объект игрок запускает метод движения вправо.
+        if (Input.GetKey(KeyCode.D)) 
         {
-            player.MoveRight();
+            _player.MoveRight();
         }
     }
 }

@@ -5,44 +5,56 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public static event Action<int> OnKeyChange;
     public InventorySO PlayerInventory;
-    public int Keys = 0; //Переменная содержит количество ключей.
-    public Sprite SpriteFront; //Переменная для изображения передней части игрока. Спрайт назначается в инспекторе.
-    public Sprite SpriteBack; //Переменная для изображения задней части игрока. Спрайт назначается в инспекторе.
-    public Sprite AttackUp; //Переменная для изображения атаки игроком сверху. Спрайт назначается в инспекторе.
-    public Sprite AttackDown; //Переменная для изображения атаки игроком снизу. Спрайт назначается в инспекторе.
-    public Sprite AttackFront; //Переменная для изображения атаки игроком сбоку. Спрайт назначается в инспекторе.
+    public bool HasKeys => _keys > 0;
     
-    private SpriteRenderer sr; 
+    private int _keys = 0;
+    private int Keys {
+        get => _keys;
+        set {
+            _keys = value;
+            OnKeyChange?.Invoke(_keys);
+        } 
+    }
+    
+    [SerializeField] private Sprite SpriteFront; 
+    [SerializeField] private Sprite SpriteBack; 
+    [SerializeField] private Sprite AttackUp; 
+    [SerializeField] private Sprite AttackDown; 
+    [SerializeField] private Sprite AttackFront;
+    
+    private SpriteRenderer _sr; 
     private float _moveDelay = 0.3f;
     private float _currentDelay = 0;
     private Vector2 _cachedDir;
     
     private void Start()
     {
-        sr = GetComponentInChildren<SpriteRenderer>(); //Получения компонента SpriteRenderer.
+        _sr = GetComponentInChildren<SpriteRenderer>();
+        Keys = 0;
     }
 
     public void MoveUp() //Метод направления движения игрока.
     {
-        sr.sprite = SpriteBack; //В переменную содержащую SpriteRenderer обращается к спрайту и записываем изображение.
+        _sr.sprite = SpriteBack; //В переменную содержащую SpriteRenderer обращается к спрайту и записываем изображение.
         MoveToDirection(Vector3.up); //В метод отвечающий за движение передается аргумент с направлением. 
     }
     public void MoveDown()
     {
-        sr.sprite = SpriteFront;
+        _sr.sprite = SpriteFront;
         MoveToDirection(Vector3.down);
     }
     public void MoveLeft()
     {
-        sr.sprite = SpriteFront;
-        sr.flipX = true; 
+        _sr.sprite = SpriteFront;
+        _sr.flipX = true; 
         MoveToDirection(Vector3.left);
     }
     public void MoveRight()
     {
-        sr.flipX = false;
-        sr.sprite = SpriteFront;
+        _sr.flipX = false;
+        _sr.sprite = SpriteFront;
         MoveToDirection(Vector3.right);
     }
 
@@ -64,66 +76,68 @@ public class PlayerController : MonoBehaviour
         }
         _cachedDir = Vector2.zero;
         _currentDelay = 0;
-        Vector3 destination = transform.position + direction; //До текущей позиции добавляется входящий параметр направления и записывается в переменную.
+        Vector3 destination = transform.position + direction; 
 
         Collider2D col = Physics2D.OverlapPoint(destination); //Проверяет наличие коллайдера в точке, в которую игрок намеревается пойти. При обнаружении записывает его в переменную.
         
-        if (col) //Проверка на обнаружение колайдера.
+        if (col)
         {
-            IAttackable attackableItem = col.GetComponentInParent<IAttackable>(); //Поиск у колайдера компонента IAttackable.
-            if (attackableItem != null) //Если у колайдера обнаружен компонент IAttackable...
+            var attackableItem = col.GetComponentInParent<IAttackable>(); 
+            if (attackableItem != null) 
             {
-                attackableItem.AttackBy(this.gameObject); //...у объекта с компонентом IAttackable срабатывает метод атаки. В качестве аргумента передается атакуемый объект.
+                attackableItem.AttackBy(this.gameObject); //В качестве аргумента передается атакуемый объект.
                 StartCoroutine(AnimateAttack(direction)); //Запускается коротина анимации атаки. В метод передается аргумент с направлением.
-                return; // Прерывает метод движения.
+                return; 
             }
 
-            ICollectable collectItem = col.GetComponentInParent<ICollectable>(); //Поиск у колайдера компонента ICollectable;
-            if (collectItem != null) //Если у колайдера обнаружен компонент ICollectable...
+            var collectItem = col.GetComponentInParent<ICollectable>(); 
+            if (collectItem != null) 
             {
                 transform.position = destination; //Текущая позиция игрока меняется на новую.
-                collectItem.CollectBy(this.gameObject); //Вызывается метод сбора. В качестве аргумента передается объект, который собрал предмет.
-                return; // Прерывает метод движения.
+                collectItem.CollectBy(this.gameObject); //В качестве аргумента передается объект, который собрал предмет.
+                return; 
             }
 
-            IPushable pushItem = col.GetComponentInParent<IPushable>(); //Поиск у колайдера компонента IPushable.
-            if (pushItem != null) //Если у колайдера обнаружен компонент IPushable.
+            var pushItem = col.GetComponentInParent<IPushable>(); 
+            if (pushItem != null) 
             {
-                pushItem.PushBy(this.gameObject); //У компонента IPushable срабатывает метод PushBy. В качестве аргумента передается объект, который толкает предмет.
+                pushItem.PushBy(this.gameObject); //В качестве аргумента передается объект, который толкает предмет.
             }
+            
             col = Physics2D.OverlapPoint(destination); // Еще раз проверяет наличие колайдера в точке. 
-            if (col)
-            {
-                return; //Прерывает метод движения.
-            }
-
-
+            if (col) return;
         }
 
         transform.position = destination; //Текущей позиции игрока присваивается новая позиция.
-      
+        
     }
     private IEnumerator AnimateAttack(Vector3 direction) //Создание коротины анимации атаки игрока с входным параметром отвечающим за направление.
     {
-        var prevSprite = sr.sprite; //Запись текущего спрайта в переменную.
+        var prevSprite = _sr.sprite; //Запись текущего спрайта в переменную.
         if (direction == Vector3.up) //Если направление вверх...
         {
-            sr.sprite = AttackUp; //... текущему спрайту присваивается спрайт атаки вверх.
+            _sr.sprite = AttackUp; //... текущему спрайту присваивается спрайт атаки вверх.
         }
         else if (direction == Vector3.down) // Иначе если направление вниз...
         {
-            sr.sprite = AttackDown; //... текущему спрайту присваивается спрайт атаки вниз.
+            _sr.sprite = AttackDown; //... текущему спрайту присваивается спрайт атаки вниз.
         }
         else //Иначе текущему спрайту присваивается спрайт атаки в сторону.
         {
-            sr.sprite = AttackFront;
+            _sr.sprite = AttackFront;
         }
+        
         yield return new WaitForSeconds(0.15f); //После удара отсчитывается время.
-        sr.sprite = prevSprite; //Текущему спрайту атаки присваивается первоначальный спрайт.
+        _sr.sprite = prevSprite; //Текущему спрайту атаки присваивается первоначальный спрайт.
     }
     
-    public void CollectKey() //Метод увеличивающий количество ключей на 1.
+    public void CollectKey() 
     {
         Keys++;
+    }
+    
+    public void RemoveKey() 
+    {
+        Keys--;
     }
 }
