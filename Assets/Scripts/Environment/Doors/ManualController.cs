@@ -8,9 +8,9 @@ public class ManualController : DoorController, IPushable
         var actorController = actor.GetComponent<PlayerController>();
         if (!actorController) return;
 
-        if (!actorController.HasKeys) return;
+        if (actorController.KeyHolder == null || actorController.KeyHolder.Keys <= 0) return;
         StartCoroutine(OpenWithDelay()); 
-        actorController.RemoveKey();
+        actorController.KeyHolder.Keys--;
 
     }
     private IEnumerator OpenWithDelay() 

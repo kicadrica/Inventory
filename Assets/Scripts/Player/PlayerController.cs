@@ -5,18 +5,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public static event Action<int> OnKeyChange;
     public InventorySO PlayerInventory;
-    public bool HasKeys => _keys > 0;
-    
-    private int _keys = 0;
-    private int Keys {
-        get => _keys;
-        set {
-            _keys = value;
-            OnKeyChange?.Invoke(_keys);
-        } 
-    }
+    public readonly KeyHolder KeyHolder = new KeyHolder();
     
     [SerializeField] private Sprite SpriteFront; 
     [SerializeField] private Sprite SpriteBack; 
@@ -24,15 +14,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Sprite AttackDown; 
     [SerializeField] private Sprite AttackFront;
     
-    private SpriteRenderer _sr; 
-    private float _moveDelay = 0.3f;
+    private SpriteRenderer _sr;
+    private const float MoveDelay = 0.3f;
     private float _currentDelay = 0;
     private Vector2 _cachedDir;
     
     private void Start()
     {
         _sr = GetComponentInChildren<SpriteRenderer>();
-        Keys = 0;
     }
 
     public void MoveUp() //Метод направления движения игрока.
@@ -69,16 +58,16 @@ public class PlayerController : MonoBehaviour
 
     private void MoveToDirection(Vector3 direction) //Метод отвечающий за движение.
     {
-        if (_currentDelay < _moveDelay) {
+        if (_currentDelay < MoveDelay) {
             _currentDelay += Time.deltaTime;
             _cachedDir = direction;
             return;
         }
         _cachedDir = Vector2.zero;
         _currentDelay = 0;
-        Vector3 destination = transform.position + direction; 
+        var destination = transform.position + direction; 
 
-        Collider2D col = Physics2D.OverlapPoint(destination); //Проверяет наличие коллайдера в точке, в которую игрок намеревается пойти. При обнаружении записывает его в переменную.
+        var col = Physics2D.OverlapPoint(destination); //Проверяет наличие коллайдера в точке, в которую игрок намеревается пойти. При обнаружении записывает его в переменную.
         
         if (col)
         {
@@ -129,15 +118,5 @@ public class PlayerController : MonoBehaviour
         
         yield return new WaitForSeconds(0.15f); //После удара отсчитывается время.
         _sr.sprite = prevSprite; //Текущему спрайту атаки присваивается первоначальный спрайт.
-    }
-    
-    public void CollectKey() 
-    {
-        Keys++;
-    }
-    
-    public void RemoveKey() 
-    {
-        Keys--;
     }
 }

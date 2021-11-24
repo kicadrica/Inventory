@@ -10,12 +10,13 @@ public class KeyUI : MonoBehaviour
     private void Start()
     {
         _keyCount = GetComponent<Text>();
-        PlayerController.OnKeyChange += ChangeKeyUI;
+        ChangeKeyUI(0);
+        KeyHolder.OnKeyChange += ChangeKeyUI;
     }
 
     private void OnDestroy()
     {
-        PlayerController.OnKeyChange -= ChangeKeyUI;
+        KeyHolder.OnKeyChange -= ChangeKeyUI;
     }
 
     private void ChangeKeyUI(int key)
