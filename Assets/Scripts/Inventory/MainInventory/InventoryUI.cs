@@ -11,13 +11,12 @@ public class InventoryUI : MonoBehaviour
     
     public InventoryCell[] CellsList = new InventoryCell[15]; //Число
     public Image MovingCell;
-    [SerializeField] private InventoryCell CellPrefab;
-    
+
     private InventorySO.InventoryItem _movingCell;
 
     private Camera _camera;
     private static InventoryUI _currentMouseHandler;
-    
+   
     private void OnEnable()
     {
         _camera = Camera.main;
@@ -25,6 +24,7 @@ public class InventoryUI : MonoBehaviour
         
         AddCellsList();
     }
+   
     private void OnDisable()
     {
         _currentMouseHandler = null;
@@ -54,12 +54,12 @@ public class InventoryUI : MonoBehaviour
 
     private void AddCellsList()
     {
-        foreach (Transform child in transform) {
-            Destroy(child.gameObject);
+        foreach (var childCell in transform.GetComponentsInChildren<InventoryCell>()) {
+            CellsPool.Instance.PutCell(childCell);
         }
         CellsList = new InventoryCell[_inventory.InventorySize];
         for (int i = 0; i < CellsList.Length; i++) {
-            var cell = Instantiate(CellPrefab, transform);
+            var cell = CellsPool.Instance.GetCell(transform);
             CellsList[i] = cell;
             CellsList[i].ItemHolder = _inventory.ItemList[i];
             CellsList[i].Init();

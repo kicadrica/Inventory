@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,13 +12,13 @@ public class BaseCell : MonoBehaviour
     
     public void Init()
     {
-        ItemHolder.OnHolderChange += UpdateCell;
         UpdateCell();
+        ItemHolder.OnHolderChange += UpdateCell;
     }
-    
-    private void OnDestroy()
+
+    private void OnDisable()
     {
-        ItemHolder.OnHolderChange -= UpdateCell;
+        if (ItemHolder != null) ItemHolder.OnHolderChange -= UpdateCell;
     }
 
     public void Hide()
