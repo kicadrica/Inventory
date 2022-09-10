@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SavePrefix: Chest1_
   InventorySize: 9
-  MaxItemsInCell: 3
+  MaxItemsInCell: 9
